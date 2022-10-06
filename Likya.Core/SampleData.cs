@@ -19,46 +19,25 @@ namespace Likya.Core
             var context = scope.ServiceProvider.GetService<ApplicationContext>();
             context.Database.Migrate();
 
-            string[] roles = new string[] { "Owner", "Administrator", "Manager", "Editor", "Buyer", "Business", "Seller", "Subscriber" };
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            // Add Roles
-            if (context.Roles.Count() == 0)
+            var adminRole = new IdentityRole("Admin");
+            if (!context.Roles.Any())
             {
-                foreach (string role in roles)
-                {
-                    var roleStore = new RoleStore<IdentityRole>(context);
-
-                    if (!context.Roles.Any(r => r.Name == role))
-                    {
-                        roleStore.CreateAsync(new IdentityRole(role));
-                    }
-                }
+                roleManager.CreateAsync(adminRole).GetAwaiter().GetResult();
             }
 
-            // Add User
-            var userStore = new UserStore<AppUser>(context);
-            var user = new AppUser
+            if (!context.Users.Any(m => m.UserName == "admin"))
             {
-                FirstName = "Admin",
-                LastName = "Admin",
-                Email = "admin@hotmail.com",
-                NormalizedEmail = "ADMIN@HOTMAIL.COM",
-                UserName = "admin",
-                NormalizedUserName = "ADMIN",
-                PhoneNumber = "+111111111111",
-                EmailConfirmed = true,
-                PhoneNumberConfirmed = true,
-                SecurityStamp = Guid.NewGuid().ToString("D")
-            };
+                var adminUser = new AppUser
+                {
+                    UserName = "admin",
+                    Email = "admin@hotmail.com"
+                };
 
-            if (!context.Users.Any(m => m.UserName == user.UserName))
-            {
-                var password = new PasswordHasher<AppUser>();
-                var hashed = password.HashPassword(user, "secret");
-                user.PasswordHash = hashed;
-
-                
-                var createUserResult = userStore.CreateAsync(user);
+                userManager.CreateAsync(adminUser, "123456a").GetAwaiter().GetResult();
+                userManager.AddToRoleAsync(adminUser, adminRole.Name).GetAwaiter().GetResult();
             }
 
             // https://stackoverflow.com/questions/34343599/how-to-seed-users-and-roles-with-code-first-migration-using-identity-asp-net-cor
