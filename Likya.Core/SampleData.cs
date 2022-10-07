@@ -22,18 +22,18 @@ namespace Likya.Core
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            var adminRole = new IdentityRole("Admin");
+            var adminRole = new IdentityRole("Administrator");
             if (!context.Roles.Any())
             {
                 roleManager.CreateAsync(adminRole).GetAwaiter().GetResult();
             }
 
-            if (!context.Users.Any(m => m.UserName == "admin"))
+            if (!context.Users.Any(m => m.UserName == "Administrator"))
             {
                 var adminUser = new AppUser
                 {
-                    UserName = "admin",
-                    Email = "admin@hotmail.com"
+                    UserName = "Administrator",
+                    Email = "administrator@hotmail.com"
                 };
 
                 userManager.CreateAsync(adminUser, "123456a").GetAwaiter().GetResult();
