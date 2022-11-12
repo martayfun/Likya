@@ -1,4 +1,5 @@
 ﻿using Likya.Core.Models;
+using Likya.Core.Models.User;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

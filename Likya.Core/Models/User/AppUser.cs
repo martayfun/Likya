@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Likya.Core.Models
+namespace Likya.Core.Models.User
 {
     public class AppUser : IdentityUser
     {

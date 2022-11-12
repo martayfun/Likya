@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Likya.Business.Services;
 using Likya.Core;
 using Likya.Core.EntityFramework;
-using Likya.Core.Models;
+using Likya.Core.Models.User;
 using Likya.Core.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;

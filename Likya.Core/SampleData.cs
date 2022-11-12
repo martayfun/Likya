@@ -1,11 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Likya.Core.EntityFramework;
-using Likya.Core.Models;
+using Likya.Core.Models.User;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -28,11 +25,11 @@ namespace Likya.Core
                 roleManager.CreateAsync(adminRole).GetAwaiter().GetResult();
             }
 
-            if (!context.Users.Any(m => m.UserName == "Administrator"))
+            if (!context.Users.Any(m => m.UserName == "administrator"))
             {
                 var adminUser = new AppUser
                 {
-                    UserName = "Administrator",
+                    UserName = "administrator",
                     Email = "administrator@hotmail.com"
                 };
 

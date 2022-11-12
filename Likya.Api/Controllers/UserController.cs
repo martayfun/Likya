@@ -3,7 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Likya.Core.Models;
+using Likya.Core.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -29,7 +29,7 @@ namespace Likya.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] UserRequest userRequest)
+        public async Task<IActionResult> Create([FromBody] UserCreateRequest userRequest)
         {
             var user = await _userManager.FindByNameAsync(userRequest.UserName);
 
@@ -57,9 +57,9 @@ namespace Likya.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] UserRequest loginRequest)
+        public async Task<IActionResult> Login([FromBody] UserLoginRequest loginRequest)
         {
-            var signIn = await _signInManager.PasswordSignInAsync(loginRequest.UserName, loginRequest.Password, false, false);
+            var signIn = await _signInManager.PasswordSignInAsync(loginRequest.UserName.ToLower(), loginRequest.Password, false, false);
 
 
             if (signIn != null && signIn.Succeeded)
@@ -68,9 +68,9 @@ namespace Likya.Api.Controllers
 
                 var token = GenerateToken(user);
 
-                Response.Cookies.Append("X-Access-Token", token, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
-                Response.Cookies.Append("X-Username", user.UserName, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
-                return Ok();
+                // Response.Cookies.Append("X-Access-Token", token, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
+                // Response.Cookies.Append("X-Username", user.UserName, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
+                return Ok(new { signIn.Succeeded, token });
             }
             else
             {
